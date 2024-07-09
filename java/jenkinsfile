@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from version control
+                git 'https://github.com/syedfaizan9920/jenkins-docker-agent.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Compile the Java code
+                sh 'javac HelloWorld.java'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                // Run tests (if there are any, here it's a simple example so we can skip actual tests)
+                // You can add actual test commands here if you have tests
+                echo 'Running tests...'
+            }
+        }
+        
+        stage('Package') {
+            steps {
+                // Package the application (optional for simple hello world, but here as an example)
+                sh 'jar cf HelloWorld.jar HelloWorld.class'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                // Deploy the application (for simplicity, we just run the class here)
+                sh 'java HelloWorld'
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Clean up workspace after build (optional)
+            cleanWs()
+        }
+    }
+}
