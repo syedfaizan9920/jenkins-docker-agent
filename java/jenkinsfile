@@ -9,31 +9,27 @@ pipeline {
             }
         }
         
-        stage('Build') {
-            steps {
-                // Compile the Java code
-                sh 'javac HelloWorld.java'
-            }
-        }
-        
         stage('Test') {
             steps {
-                // Run tests (if there are any, here it's a simple example so we can skip actual tests)
-                // You can add actual test commands here if you have tests
-                echo 'Running tests...'
-            }
-        }
-        
-        stage('Package') {
-            steps {
-                // Package the application (optional for simple hello world, but here as an example)
-                sh 'jar cf HelloWorld.jar HelloWorld.class'
+                // Create a simple test script for the HelloWorld application
+                writeFile file: 'HelloWorldTest.java', text: '''public class HelloWorldTest {
+                    public static void main(String[] args) {
+                        HelloWorld.main(null);
+                        System.out.println("Test passed!");
+                    }
+                }'''
+
+                // Compile both the application and the test
+                sh 'javac HelloWorld.java HelloWorldTest.java'
+
+                // Run the test
+                sh 'java HelloWorldTest'
             }
         }
         
         stage('Deploy') {
             steps {
-                // Deploy the application (for simplicity, we just run the class here)
+                // Run the application
                 sh 'java HelloWorld'
             }
         }
